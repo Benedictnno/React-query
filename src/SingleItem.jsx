@@ -1,33 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import customFetch from "./utils";
-import { toast } from "react-toastify";
+import { useDeleteTask, useEditTask } from "./ReactQuery";
 
 const SingleItem = ({ item }) => {
-  const queryClient = useQueryClient();
-  const { mutate: EditTask } = useMutation({
-    mutationFn: ({ trackId, isDone }) =>
-      customFetch.patch(`/${trackId}`, { isDone }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tasks"] });
-      // toast.success("task edited");
-      // setEditing("");
-    },
-    onError: (error) => {
-      toast.error(error.response.data.msg);
-    },
-  });
-  const { mutate: deleteTask, isLoading } = useMutation({
-    mutationFn: ({ trackId }) => customFetch.delete(`/${trackId}`),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tasks"] });
-      // toast.success("task edited");
-      // setEditing("");
-    },
-    onError: (error) => {
-      toast.error(error.response.data.msg);
-    },
-  });
+  const { EditTask } = useEditTask();
+  const { deleteTask, isLoading } = useDeleteTask();
 
   return (
     <div className="single-item">
@@ -56,3 +31,4 @@ const SingleItem = ({ item }) => {
   );
 };
 export default SingleItem;
+ 
