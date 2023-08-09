@@ -9,7 +9,7 @@ const Form = () => {
   const { mutate: createTask, isLoading } = useMutation({
     mutationFn: (taskTitle) => customFetch.post("/", { title: taskTitle }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["task"] });
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
       toast.success("task added");
       setNewItemName("");
     },

@@ -9,7 +9,18 @@ const SingleItem = ({ item }) => {
     mutationFn: ({ trackId, isDone }) =>
       customFetch.patch(`/${trackId}`, { isDone }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["task"] });
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      // toast.success("task edited");
+      // setEditing("");
+    },
+    onError: (error) => {
+      toast.error(error.response.data.msg);
+    },
+  });
+  const { mutate: deleteTask, isLoading } = useMutation({
+    mutationFn: ({ trackId }) => customFetch.delete(`/${trackId}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
       // toast.success("task edited");
       // setEditing("");
     },
@@ -36,7 +47,8 @@ const SingleItem = ({ item }) => {
       <button
         className="btn remove-btn"
         type="button"
-        onClick={() => console.log("delete task")}
+        disabled={isLoading}
+        onClick={() => deleteTask({ trackId: item.id })}
       >
         delete
       </button>
